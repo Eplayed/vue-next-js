@@ -23,24 +23,25 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: true
+    open: true,
+    proxy: {
+      '/dev-api': {
+        // target: 'http://10.108.14.198:8080',
+        target: 'http://10.108.14.1:7001',
+        pathRewrite: { '^/dev-api': '' },
+        changeOrigin: true,
+        onProxyReq(proxyReq, req, res, options) {
+          if (req.body) {
+            let bodyData = JSON.stringify(req.body);
+            proxyReq.setHeader('Content-Type', 'application/json');
+            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+            proxyReq.write(bodyData);
+          }
+        }
+      }
+    },
   },
-  // proxy: {
-  //   '/dev-api': {
-  //     // target: 'http://10.108.14.198:8080',
-  //     target: 'http://10.108.26.83:8080',
-  //     pathRewrite: { '^/dev-api': '' },
-  //     changeOrigin: true,
-  //     onProxyReq(proxyReq, req, res, options) {
-  //       if (req.body) {
-  //         let bodyData = JSON.stringify(req.body);
-  //         proxyReq.setHeader('Content-Type', 'application/json');
-  //         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-  //         proxyReq.write(bodyData);
-  //       }
-  //     }
-  //   }
-  // },
+
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
