@@ -1,3 +1,4 @@
+
 <template>
   <div class="nav">
     <div>{{ index }}</div>
@@ -8,7 +9,7 @@
 </template>
 
 <script>
-// import { reactive, ref } from "vue";
+import { ref } from "vue";
 export default {
   props: {
     activeIndex: {
@@ -18,7 +19,7 @@ export default {
   },
   setup(props, context) {
     console.log("context", context);
-    let index = props.activeIndex;
+    let index = ref(props.activeIndex);
     const navList = [
       {
         name: "首页",
@@ -35,7 +36,7 @@ export default {
     ];
     const handleClick = (id) => {
       console.log("id", id);
-      index = id;
+      index.value = id;
       console.log("activeIndex", index);
     };
 
